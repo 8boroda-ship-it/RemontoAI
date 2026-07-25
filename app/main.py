@@ -12,26 +12,34 @@ from .admin import build_admin_router
 from .client import build_client_router
 from .config import Config
 from .db import Database
+from .sheets import GoogleSheetsSync
 
 
 async def run() -> None:
     config = Config.from_env()
     db = Database(config.db_path)
     db.initialize()
+    sheets = GoogleSheetsSync(
+        config.google_sheets_webhook_url,
+        config.google_sheets_webhook_secret,
+    )
 
     bot = Bot(
         token=config.bot_token,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
     dispatcher = Dispatcher()
-    dispatcher.include_router(build_admin_router(db, config))
-    dispatcher.include_router(build_client_router(db, config))
+    dispatcher.include_router(build_admin_router(db, config, sheets))
+    dispatcher.include_router(build_client_router(db, config, sheets))
 
     me = await bot.get_me()
     logging.getLogger(__name__).info(
         "Remonto AI started as @%s; admins=%s",
         me.username,
         sorted(config.admin_ids),
+    )
+    logging.getLogger(__name__).info(
+        "Google Sheets sync: %s", "enabled" if sheets.enabled else "disabled"
     )
     await bot.delete_webhook(drop_pending_updates=False)
     try:

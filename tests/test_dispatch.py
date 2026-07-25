@@ -4,7 +4,8 @@ import tempfile
 import unittest
 from datetime import UTC, datetime
 from pathlib import Path
-from unittest.mock import patch
+from types import SimpleNamespace
+from unittest.mock import AsyncMock, patch
 
 from aiogram import Bot, Dispatcher
 from aiogram.types import CallbackQuery, Chat, Message, Update, User
@@ -30,9 +31,14 @@ class DispatchIntegrationTests(unittest.IsolatedAsyncioTestCase):
             self.path,
             "Europe/Moscow",
         )
+        self.sheets = SimpleNamespace(sync_order=AsyncMock(return_value=True))
         self.dispatcher = Dispatcher()
-        self.dispatcher.include_router(build_admin_router(self.db, self.config))
-        self.dispatcher.include_router(build_client_router(self.db, self.config))
+        self.dispatcher.include_router(
+            build_admin_router(self.db, self.config, self.sheets)
+        )
+        self.dispatcher.include_router(
+            build_client_router(self.db, self.config, self.sheets)
+        )
         self.bot = Bot(self.config.bot_token)
         self.calls = []
 
@@ -143,6 +149,10 @@ class DispatchIntegrationTests(unittest.IsolatedAsyncioTestCase):
         ]
         self.assertTrue(any(f"Заявка #{self.order_id}" in call.text for call in edits))
         self.assertEqual(self.db.get_order(self.order_id)["status"], STATUS_IN_PROGRESS)
+        self.sheets.sync_order.assert_awaited_once()
+        synced_order = self.sheets.sync_order.await_args.args[0]
+        self.assertEqual(synced_order["id"], self.order_id)
+        self.assertEqual(synced_order["status"], STATUS_IN_PROGRESS)
         notifications = [
             call
             for call in self.calls

@@ -33,6 +33,7 @@ from .keyboards import (
     simple_back,
     statuses_keyboard,
 )
+from .sheets import GoogleSheetsSync
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +54,11 @@ async def _safe_edit(callback: CallbackQuery, text: str, reply_markup=None) -> N
             raise
 
 
-def build_admin_router(db: Database, config: Config) -> Router:
+def build_admin_router(
+    db: Database,
+    config: Config,
+    sheets: GoogleSheetsSync | None = None,
+) -> Router:
     router = Router(name="admin")
     admin_filter = AdminFilter(config.admin_ids)
     router.message.filter(admin_filter)
@@ -157,6 +162,8 @@ def build_admin_router(db: Database, config: Config) -> Router:
             callback, order_card(order, config.timezone), order_keyboard(order)
         )
         await callback.answer("Статус обновлён")
+        if sheets:
+            await sheets.sync_order(order)
 
     edit_fields = {
         "dt": ("scheduled_at", "дату и время", "27.07.2026 14:30"),
@@ -223,6 +230,8 @@ def build_admin_router(db: Database, config: Config) -> Router:
             f"✅ Сохранено\n\n{order_card(order, config.timezone)}",
             reply_markup=order_keyboard(order),
         )
+        if sheets:
+            await sheets.sync_order(order)
 
     @router.callback_query(F.data == "a:cal")
     async def schedule(callback: CallbackQuery) -> None:

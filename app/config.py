@@ -26,6 +26,8 @@ class Config:
     admin_ids: frozenset[int]
     db_path: Path
     timezone: str
+    google_sheets_webhook_url: str = ""
+    google_sheets_webhook_secret: str = ""
 
     @classmethod
     def from_env(cls) -> Config:
@@ -55,4 +57,10 @@ class Config:
                 or "data/remonto.db"
             ),
             timezone=os.getenv("TIMEZONE", "Europe/Moscow"),
+            google_sheets_webhook_url=os.getenv(
+                "GOOGLE_SHEETS_WEBHOOK_URL", ""
+            ).strip(),
+            google_sheets_webhook_secret=os.getenv(
+                "GOOGLE_SHEETS_WEBHOOK_SECRET", ""
+            ).strip(),
         )
