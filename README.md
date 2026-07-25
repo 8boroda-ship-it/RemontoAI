@@ -36,6 +36,8 @@ Telegram-бот домашнего сервиса с полноценной па
    ADMIN_IDS=ваш_telegram_id
    DB_PATH=data/remonto.db
    TIMEZONE=Europe/Moscow
+   GOOGLE_SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/.../exec
+   GOOGLE_SHEETS_WEBHOOK_SECRET=длинный_случайный_секрет
    ```
 
 4. Запустить:
@@ -57,9 +59,16 @@ Telegram-бот домашнего сервиса с полноценной па
 ## Railway
 
 Проект содержит `Dockerfile`, `Procfile` и `railway.toml`. Переменные
-`BOT_TOKEN`, `ADMIN_IDS`, `DB_PATH` и `TIMEZONE` задаются в Variables.
+`BOT_TOKEN`, `ADMIN_IDS`, `DB_PATH`, `TIMEZONE`,
+`GOOGLE_SHEETS_WEBHOOK_URL` и `GOOGLE_SHEETS_WEBHOOK_SECRET` задаются в Variables.
 Для SQLite нужен постоянный Volume; `DB_PATH` должен указывать внутрь него,
 например `/data/remonto.db`.
+
+Если обе переменные Google Sheets заданы, новая заявка и каждое изменение её
+статуса, даты, стоимости или заметки автоматически отправляются в общую
+таблицу. Вебхук выполняет обновление по номеру заявки, поэтому повторная
+отправка не создаёт дубликаты. Ошибка Google Sheets журналируется, но не мешает
+боту отвечать клиенту и администратору.
 
 ## Проверка
 

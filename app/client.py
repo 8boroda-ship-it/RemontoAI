@@ -21,6 +21,7 @@ from .db import Database
 from .domain import CITIES, STATUS_LABELS
 from .formatters import esc, estimate_price, money
 from .keyboards import client_menu
+from .sheets import GoogleSheetsSync
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,11 @@ def _city_keyboard() -> InlineKeyboardMarkup:
     )
 
 
-def build_client_router(db: Database, config: Config) -> Router:
+def build_client_router(
+    db: Database,
+    config: Config,
+    sheets: GoogleSheetsSync | None = None,
+) -> Router:
     router = Router(name="client")
 
     @router.message(CommandStart())
@@ -222,6 +227,8 @@ def build_client_router(db: Database, config: Config) -> Router:
                 await bot.send_message(admin_id, admin_text, reply_markup=keyboard)
             except (TelegramBadRequest, TelegramForbiddenError):
                 logger.warning("Cannot notify admin %s", admin_id)
+        if sheets:
+            await sheets.sync_order(db.get_order(order_id))
 
     @router.message(F.text == "📋 Мои заявки")
     async def my_orders(message: Message) -> None:
