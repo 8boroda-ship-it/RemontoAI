@@ -1,0 +1,85 @@
+{
+  "minimum_order": 2000,
+  "services": [
+    {
+      "code": "socket",
+      "name": "Розетка или выключатель",
+      "keywords": ["розетк", "выключател", "подрозетник"],
+      "price_min": 1000,
+      "price_max": 2500,
+      "duration_hours": 2
+    },
+    {
+      "code": "light",
+      "name": "Люстра или светильник",
+      "keywords": ["люстр", "светильник", "бра", "ламп"],
+      "price_min": 1800,
+      "price_max": 3500,
+      "duration_hours": 2
+    },
+    {
+      "code": "faucet",
+      "name": "Смеситель или сифон",
+      "keywords": ["смесител", "сифон", "кран", "теч"],
+      "price_min": 1800,
+      "price_max": 3500,
+      "duration_hours": 2
+    },
+    {
+      "code": "toilet",
+      "name": "Унитаз или арматура бачка",
+      "keywords": ["унитаз", "бачок", "арматур"],
+      "price_min": 2000,
+      "price_max": 4500,
+      "duration_hours": 3
+    },
+    {
+      "code": "washer",
+      "name": "Подключение стиральной машины",
+      "keywords": ["стиральн", "стиралк", "посудомоеч"],
+      "price_min": 2000,
+      "price_max": 3500,
+      "duration_hours": 2
+    },
+    {
+      "code": "furniture",
+      "name": "Сборка мебели",
+      "keywords": ["собрать", "сборка", "шкаф", "комод", "кровать", "стеллаж", "тумб"],
+      "price_min": 2000,
+      "price_max": 6000,
+      "duration_hours": 3
+    },
+    {
+      "code": "wall_mount",
+      "name": "Навеска на стену",
+      "keywords": ["повесить", "карниз", "телевизор", "полк", "зеркал", "жалюзи"],
+      "price_min": 2000,
+      "price_max": 4500,
+      "duration_hours": 2
+    },
+    {
+      "code": "sink",
+      "name": "Врезка и подключение мойки",
+      "keywords": ["мойк", "столешниц", "врезать"],
+      "price_min": 3000,
+      "price_max": 6500,
+      "duration_hours": 3
+    },
+    {
+      "code": "electrical",
+      "name": "Электромонтажные работы",
+      "keywords": ["электрик", "провод", "кабель", "автомат", "щиток", "коробк"],
+      "price_min": 2500,
+      "price_max": 10000,
+      "duration_hours": 4
+    },
+    {
+      "code": "plumbing",
+      "name": "Сантехнические работы",
+      "keywords": ["сантехник", "труб", "водоснаб", "насос", "гидроаккумулятор"],
+      "price_min": 2500,
+      "price_max": 10000,
+      "duration_hours": 4
+    }
+  ]
+}
