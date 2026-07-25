@@ -1,2 +1,1 @@
-"""Remonto AI application package."""
-
+"""Remonto AI Telegram bot."""
